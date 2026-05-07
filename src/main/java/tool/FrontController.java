@@ -11,11 +11,13 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class FrontController
  */
+
 @WebServlet("*.action")
 public class FrontController extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	try {
     		//パスを取得
