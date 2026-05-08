@@ -10,6 +10,7 @@ import bean.Subject;
 
 public class SubjectDao extends Dao {
 
+	//全科目取得
     public List<Subject> findAll() {
         List<Subject> list = new ArrayList<>();
 
@@ -33,4 +34,47 @@ public class SubjectDao extends Dao {
 
         return list;
     }
+    
+    
+    
+    
+    
+    //検索科目取得
+    public List<Subject> filter(String school) {
+        List<Subject> list = new ArrayList<>();
+
+        try {
+            Connection con = getConnection();
+
+            String sql = "SELECT school, cd, name FROM subject WHERE school = ? ORDER BY cd";
+
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, school);
+
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                Subject s = new Subject();
+                s.setSchool(rs.getString("school"));
+                s.setCd(rs.getString("cd"));
+                s.setName(rs.getString("name"));
+                list.add(s);
+            }
+
+            rs.close();
+            st.close();
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }
+
+
+	
+
+	
