@@ -10,25 +10,26 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 
-@WebFilter(urlPatterns = { "/*" })
+@WebFilter("/*")
 public class EncodingFilter implements Filter {
-	/**
-	 * doFilterメソッド フィルター処理を記述
-	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		// 文字コードをセット
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html; charset=UTF-8");
 
-		// System.out.println("フィルタの前処理");
-		chain.doFilter(request, response);
-		// System.out.println("フィルタの後処理");
-	}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
 
-	public void init(FilterConfig filterConfig) {
-	}
+        // リクエストの文字コードを UTF-8 に統一
+        request.setCharacterEncoding("UTF-8");
 
-	public void destroy() {
-	}
+        // レスポンスの文字コードも UTF-8 に統一
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+
+        chain.doFilter(request, response);
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) {}
+
+    @Override
+    public void destroy() {}
 }
