@@ -17,6 +17,20 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 ${param.scripts}
 </head>
+<style>
+    .error-yellow {
+    color: #d58512;          /* オレンジ色 */
+    font-weight: bold;
+    font-size: 0.9rem;
+
+    /* ▼ 位置調整（ここが重要） */
+    margin-left: 0.3rem;     /* 左に寄せる（今より左へ） */
+    margin-top: -0.4rem;     /* 少し上に引き上げる */
+    margin-bottom: 0.4rem;   /* 下の余白は少しだけ */
+}
+
+</style>
+
 <body>
 	<div id="wrapper" class="container">
 		<header

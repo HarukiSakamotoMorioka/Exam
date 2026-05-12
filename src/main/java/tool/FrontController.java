@@ -44,5 +44,6 @@ public class FrontController extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
+
 }
 

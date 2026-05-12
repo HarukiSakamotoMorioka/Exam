@@ -14,7 +14,7 @@ public class SubjectDao extends Dao {
     public List<Subject> findAll() {
         List<Subject> list = new ArrayList<>();
 
-        String sql = "SELECT school, cd, name FROM subject ORDER BY cd";
+        String sql = "SELECT school_cd, cd, name FROM subject ORDER BY cd";
 
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -22,7 +22,7 @@ public class SubjectDao extends Dao {
 
             while (rs.next()) {
                 Subject s = new Subject();
-                s.setSchool(rs.getString("school"));
+                s.setSchool(rs.getString("school_cd"));
                 s.setCd(rs.getString("cd"));
                 s.setName(rs.getString("name"));
                 list.add(s);
@@ -55,7 +55,7 @@ public class SubjectDao extends Dao {
 
             while (rs.next()) {
                 Subject s = new Subject();
-                s.setSchool(rs.getString("school"));
+                s.setSchool(rs.getString("school_cd"));
                 s.setCd(rs.getString("cd"));
                 s.setName(rs.getString("name"));
                 list.add(s);
@@ -71,6 +71,51 @@ public class SubjectDao extends Dao {
 
         return list;
     }
+	 // 科目コードで1件取得（重複チェック用）
+	    public Subject find(String cd) {
+	        Subject subject = null;
+	
+	        String sql = "SELECT school, cd, name FROM subject WHERE cd = ?";
+	
+	        try (Connection con = getConnection();
+	             PreparedStatement ps = con.prepareStatement(sql)) {
+	
+	            ps.setString(1, cd);
+	
+	            try (ResultSet rs = ps.executeQuery()) {
+	                if (rs.next()) {
+	                    subject = new Subject();
+	                    subject.setSchool(rs.getString("school_cd"));
+	                    subject.setCd(rs.getString("cd"));
+	                    subject.setName(rs.getString("name"));
+	                }
+	            }
+	
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	
+	        return subject;
+	    }
+		 // 科目登録
+		    public void insert(Subject subject) {
+		        String sql = "INSERT INTO subject (school_cd, cd, name) VALUES (?, ?, ?)";
+	
+		        try (Connection con = getConnection();
+		             PreparedStatement ps = con.prepareStatement(sql)) {
+	
+		            ps.setString(1, subject.getSchool());
+		            ps.setString(2, subject.getCd());
+		            ps.setString(3, subject.getName());
+	
+		            ps.executeUpdate();
+	
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+		    }
+
+
 
 }
 
