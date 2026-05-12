@@ -1,7 +1,5 @@
 package scoremanager.main;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +8,7 @@ import bean.Teacher;
 import bean.TestListStudent;
 import bean.TestListSubject;
 import dao.ClassNumDao;
+import dao.StudentDao;
 import dao.SubjectDao;
 import dao.TestListStudentDao;
 import dao.TestListSubjectDao;
@@ -26,91 +25,122 @@ public class TestListAction extends Action {
         HttpSession session = request.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
 
-        // teacher が null の場合はログインへ
         if (teacher == null) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        String school = teacher.getSchool().getCd();
+        String schoolCd = teacher.getSchool().getCd();
 
+        // 科目検索用
         String entYearStr = request.getParameter("f1");
         String classNum = request.getParameter("f2");
         String subjectCd = request.getParameter("f3");
 
+        // 学生番号検索用
+        String studentNo = request.getParameter("student_no");
+
         Map<String, String> errors = new HashMap<>();
+
+        // 初期表示
+        if (entYearStr == null && studentNo == null) {
+            setForm(request, 0, "0", "0", "", errors, teacher);
+            request.getRequestDispatcher("test_list.jsp").forward(request, response);
+            return;
+        }
+
+        // ============================
+        // ① 学生番号検索
+        // ============================
+        if (studentNo != null && !studentNo.isEmpty()) {
+
+            TestListStudentDao stuDao = new TestListStudentDao();
+            List<TestListStudent> scores = stuDao.filterByStudentNo(schoolCd, studentNo);
+
+            if (scores.isEmpty()) {
+                errors.put("notfound", "成績情報が存在しませんでした");
+                setForm(request, 0, "0", "0", studentNo, errors, teacher);
+                request.getRequestDispatcher("test_list.jsp").forward(request, response);
+                return;
+            }
+
+            request.setAttribute("scores", scores);
+            setForm(request, 0, "0", "0", studentNo, errors, teacher);
+            request.getRequestDispatcher("test_list.jsp").forward(request, response);
+            return;
+        }
+
+        // ============================
+        // ② 科目検索
+        // ============================
 
         int entYear = 0;
         if (entYearStr != null && entYearStr.matches("\\d+")) {
             entYear = Integer.parseInt(entYearStr);
         }
 
-        // 入力チェック
-        if (entYear == 0 || classNum == null || "0".equals(classNum)
-                || subjectCd == null || "0".equals(subjectCd)) {
-
+        if (entYear == 0 || "0".equals(classNum) || "0".equals(subjectCd)) {
             errors.put("input", "入学年度とクラスと科目を選択してください");
-            setForm(request, entYear, classNum, subjectCd, errors, teacher);
+            setForm(request, entYear, classNum, subjectCd, "", errors, teacher);
             request.getRequestDispatcher("test_list.jsp").forward(request, response);
             return;
         }
 
-        // DAO
         TestListStudentDao stuDao = new TestListStudentDao();
         TestListSubjectDao subDao = new TestListSubjectDao();
 
-        // ① 学生が存在するかチェック
-        List<TestListStudent> students = stuDao.filter(school, entYear, classNum);
+        List<TestListStudent> students = stuDao.filter(schoolCd, entYear, classNum);
 
         if (students.isEmpty()) {
             errors.put("notfound", "学生情報が存在しませんでした");
-            setForm(request, entYear, classNum, subjectCd, errors, teacher);
+            setForm(request, entYear, classNum, subjectCd, "", errors, teacher);
             request.getRequestDispatcher("test_list.jsp").forward(request, response);
             return;
         }
 
-        // ② 成績を取得
-        List<TestListSubject> scores = subDao.filter(school, subjectCd, entYear, classNum);
+        List<TestListSubject> scores = subDao.filter(schoolCd, subjectCd, entYear, classNum);
 
         if (scores.isEmpty()) {
             errors.put("notfound", "成績情報が存在しませんでした");
-            setForm(request, entYear, classNum, subjectCd, errors, teacher);
+            setForm(request, entYear, classNum, subjectCd, "", errors, teacher);
             request.getRequestDispatcher("test_list.jsp").forward(request, response);
             return;
         }
 
-        // 正常 → 成績一覧を表示
-        setForm(request, entYear, classNum, subjectCd, errors, teacher);
         request.setAttribute("scores", scores);
-
+        setForm(request, entYear, classNum, subjectCd, "", errors, teacher);
         request.getRequestDispatcher("test_list.jsp").forward(request, response);
     }
 
     private void setForm(HttpServletRequest request, int entYear,
-            String classNum, String subjectCd,
+            String classNum, String subjectCd, String studentNo,
             Map<String, String> errors, Teacher teacher) throws Exception {
 
-        LocalDate today = LocalDate.now();
-        int year = today.getYear();
+        String schoolCd = teacher.getSchool().getCd();
 
-        List<Integer> entYearSet = new ArrayList<>();
-        for (int i = 0; i < 10; i++) entYearSet.add(year - i);
-
+        StudentDao stuDao = new StudentDao();
         ClassNumDao cDao = new ClassNumDao();
         SubjectDao sDao = new SubjectDao();
 
-        // ★ JSP と完全一致（f1 / f2 / f3）
+        // ★ DB から入学年度一覧を取得
+        request.setAttribute("ent_year_set",
+                stuDao.getEntYearList(schoolCd));
+
+        // ★ DB からクラス番号一覧を取得
+        request.setAttribute("class_num_set",
+                cDao.filter(schoolCd));
+
+        // ★ DB から科目一覧を取得
+        request.setAttribute("subject_set",
+                sDao.filter(schoolCd));
+
+        // 入力値保持
         request.setAttribute("f1", entYear);
         request.setAttribute("f2", classNum);
         request.setAttribute("f3", subjectCd);
-
-        // ★ ClassNumDao.filter(School) を正しく呼べる
-        request.setAttribute("class_num_set",
-        	    cDao.filter(teacher.getSchool()));
-
-        request.setAttribute("subject_set", sDao.filter(teacher.getSchool().getCd()));
-        request.setAttribute("ent_year_set", entYearSet);
+        request.setAttribute("student_no", studentNo);
 
         request.setAttribute("errors", errors);
     }
+
 }

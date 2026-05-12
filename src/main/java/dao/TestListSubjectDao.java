@@ -10,17 +10,21 @@ import bean.TestListSubject;
 
 public class TestListSubjectDao extends Dao {
 
-    private static final String SQL =
-        "SELECT t.student_no, t.subject_cd, sub.name AS subject_name, " +
-        "       t.no, t.point, t.class_num " +
-        "FROM test t " +
-        "JOIN student st ON t.student_no = st.no AND t.school_cd = st.school_cd " +
-        "JOIN subject sub ON t.subject_cd = sub.cd AND t.school_cd = sub.school " +
-        "WHERE t.school_cd = ? " +
-        "  AND t.subject_cd = ? " +
-        "  AND st.ent_year = ? " +
-        "  AND st.class_num = ? " +
-        "ORDER BY t.student_no, t.no";
+	private static final String SQL =
+		    "SELECT t.student_no, t.subject_cd, sub.name AS subject_name, " +
+		    "       t.no, t.point, t.class_num " +
+		    "FROM test t " +
+		    "JOIN student st ON t.student_no = st.no AND t.school_cd = st.school_cd " +
+		    "JOIN subject sub ON t.subject_cd = sub.cd AND t.school_cd = sub.school_cd " +
+		    "WHERE t.school_cd = ? " +
+		    "  AND t.subject_cd = ? " +
+		    "  AND st.ent_year = ? " +
+		    "  AND st.class_num = ? " +
+		    "ORDER BY t.student_no, t.no";
+
+
+
+
 
     public List<TestListSubject> filter(String school, String subjectCd, int entYear, String classNum) throws Exception {
 

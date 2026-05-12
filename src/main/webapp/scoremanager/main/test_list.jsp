@@ -5,9 +5,10 @@
 <c:param name="title">得点管理システム</c:param>
 
 <c:param name="content">
+
 <section class="me-4">
 
-    <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2 px-4">成績情報</h2>
+    <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2 px-4">成績一覧（科目 / 学生）</h2>
 
     <!-- エラー表示 -->
     <c:if test="${not empty errors.input}">
@@ -18,8 +19,13 @@
         <div class="alert alert-warning">${errors.notfound}</div>
     </c:if>
 
-    <form method="get">
-        <div class="row border mx-3 mb-3 py-2 align-items-center round" id="filter">
+
+    <!-- 科目検索フォーム -->
+
+    <h4 class="mt-4">科目情報</h4>
+
+    <form method="get" action="TestList.action">
+        <div class="row border mx-3 mb-3 py-2 align-items-center rounded">
 
             <!-- 入学年度 -->
             <div class="col-2">
@@ -56,15 +62,26 @@
                 </select>
             </div>
 
-            <!-- 回数 -->
-            <div class="col-2">
-                <label class="form-label">回数</label>
-                <select class="form-select" name="f4">
-                    <option value="0">--------</option>
-                    <c:forEach begin="1" end="10" var="i">
-                        <option value="${i}" <c:if test="${i == f4}">selected</c:if>>${i}</option>
-                    </c:forEach>
-                </select>
+            <div class="col-2 text-center">
+                <button class="btn btn-secondary">検索</button>
+            </div>
+
+        </div>
+    </form>
+
+
+    <!-- 学生検索フォーム -->
+
+    <h4 class="mt-4">学生情報</h4>
+
+    <form method="get" action="TestListStudent.action">
+        <div class="row border mx-3 mb-3 py-2 align-items-center rounded">
+
+            <div class="col-4">
+                <label class="form-label">学生番号</label>
+                <input type="text" class="form-control" name="student_no"
+                       placeholder="学生番号を入力してください"
+                       value="${student_no}">
             </div>
 
             <div class="col-2 text-center">
@@ -74,7 +91,9 @@
         </div>
     </form>
 
+
     <!-- 成績一覧 -->
+
     <c:choose>
         <c:when test="${scores != null && scores.size() > 0}">
             <div>検索結果：${scores.size()}件</div>
@@ -107,5 +126,6 @@
     </c:choose>
 
 </section>
+
 </c:param>
 </c:import>
