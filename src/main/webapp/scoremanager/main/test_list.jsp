@@ -74,22 +74,23 @@
 
     <h4 class="mt-4">学生情報</h4>
 
-    <form method="get" action="TestListStudent.action">
-        <div class="row border mx-3 mb-3 py-2 align-items-center rounded">
+    <form method="get" action="TestList.action">
+    <div class="row border mx-3 mb-3 py-2 align-items-center rounded">
 
-            <div class="col-4">
-                <label class="form-label">学生番号</label>
-                <input type="text" class="form-control" name="student_no"
-                       placeholder="学生番号を入力してください"
-                       value="${student_no}">
-            </div>
-
-            <div class="col-2 text-center">
-                <button class="btn btn-secondary">検索</button>
-            </div>
-
+        <div class="col-4">
+            <label class="form-label">学生番号</label>
+            <input type="text" class="form-control" name="student_no"
+                   placeholder="学生番号を入力してください"
+                   value="${student_no}">
         </div>
-    </form>
+
+        <div class="col-2 text-center">
+            <button class="btn btn-secondary">検索</button>
+        </div>
+
+    </div>
+</form>
+
 
 
     <!-- 成績一覧 -->
