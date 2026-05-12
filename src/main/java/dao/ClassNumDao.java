@@ -6,11 +6,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import bean.School;
-
 public class ClassNumDao extends Dao {
 
-    public List<String> filter(School school) throws Exception {
+    public List<String> filter(String schoolCd) throws Exception {
+
         List<String> list = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -18,11 +17,10 @@ public class ClassNumDao extends Dao {
         ResultSet rSet = null;
 
         try {
-            // クラス番号を取得するSQL（例：class_num テーブルがある前提）
             String sql = "SELECT class_num FROM class_num WHERE school_cd = ? ORDER BY class_num ASC";
 
             statement = connection.prepareStatement(sql);
-            statement.setString(1, school.getCd());
+            statement.setString(1, schoolCd);
             rSet = statement.executeQuery();
 
             while (rSet.next()) {

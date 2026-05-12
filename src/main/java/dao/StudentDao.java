@@ -72,6 +72,7 @@ public class StudentDao extends Dao{
 		return student;
 	}
 
+	
 	private List<Student> postFilter(ResultSet rSet, School school) throws Exception{
 		List<Student> list = new ArrayList<>();
 		try{
@@ -97,6 +98,7 @@ public class StudentDao extends Dao{
 		return list;
 	}
 
+	
 	public List<Student> filter(School school, int entYear,
 		String classNum, boolean isAttend) throws Exception{
 		// リストを初期化
@@ -154,6 +156,7 @@ public class StudentDao extends Dao{
 		return list;
 	}
 
+	
 	public List<Student> filter(School school, int entYear,
 		boolean isAttend) throws Exception{
 		// リストを初期化
@@ -209,6 +212,7 @@ public class StudentDao extends Dao{
 			return list;
 		}
 
+	
 	public List<Student> filter(School school, boolean isAttend) throws Exception{
 			// リストを初期化
 			List<Student> list = new ArrayList<>();
@@ -261,6 +265,7 @@ public class StudentDao extends Dao{
 				return list;
 			}
 
+	
 	public boolean save(Student student) throws Exception{
 		// コネクションを確立
 		Connection connection = getConnection();
@@ -312,6 +317,7 @@ public class StudentDao extends Dao{
 		}
 	}
 	
+	
 	public boolean delete(String no,String school_cd)throws Exception{
 		Connection connection = getConnection();
 		PreparedStatement statement = null;
@@ -345,4 +351,32 @@ public class StudentDao extends Dao{
 			return false;
 		}
 	}
+	
+	
+	public List<Integer> getEntYearList(String schoolCd) throws Exception {
+
+	    List<Integer> list = new ArrayList<>();
+
+	    Connection con = getConnection();
+	    PreparedStatement st = con.prepareStatement(
+	        "SELECT DISTINCT ent_year FROM student WHERE school_cd = ? ORDER BY ent_year DESC"
+	    );
+	    st.setString(1, schoolCd);
+
+	    ResultSet rs = st.executeQuery();
+
+	    while (rs.next()) {
+	        list.add(rs.getInt("ent_year"));
+	    }
+
+	    rs.close();
+	    st.close();
+	    con.close();
+
+	    return list;
+	}
+
 }
+
+
+
