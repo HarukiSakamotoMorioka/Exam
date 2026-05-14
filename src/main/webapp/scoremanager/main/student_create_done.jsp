@@ -1,12 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 
-<!-- ✅ 共通ヘッダー -->
-<%@ include file="../common/header.jsp" %>
-
 <div style="display:flex;">
 
-    <!-- ✅ 左メニュー -->
-    <%@ include file="../common/sidebar.jsp" %>
+
 
     <!-- ✅ メイン -->
     <div style="padding:20px; width:100%;">
