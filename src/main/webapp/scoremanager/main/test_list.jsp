@@ -1,34 +1,35 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <style>
-/* === ボックス（画像と完全一致） === */
+/* ==== ボックス ==== */
 .block-box {
     border: 1px solid #ccc;
-    padding: 14px 16px;
-    margin-bottom: 18px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
     border-radius: 8px;
     background-color: #ffffff;
 }
 
-/* === ラベル === */
+/* ==== ラベル ==== */
 .form-label {
-    margin-bottom: 4px;
-    font-size: 13px;
+    margin-bottom: 6px;
+    font-size: 14px;
 }
 
-/* === 入力・セレクト === */
+/* ==== 入力・セレクト（横長にする）==== */
 .form-select-sm,
 .form-control-sm {
-    height: 36px;
-    padding: 4px 10px;
-    font-size: 13px;
+    height: 38px;
+    padding: 6px 10px;
+    font-size: 14px;
 }
 
-/* === 検索ボタン（高さ・位置一致） === */
+/* ==== 検索ボタン（サイズ固定）==== */
 .search-btn {
-    margin-top: 26px;
-    height: 36px;
+    margin-top: 28px;
+    height: 38px;
+    width: 120px;   /* ← 横幅固定が重要 */
     font-size: 14px;
 }
 </style>
@@ -39,10 +40,10 @@
 
 <c:param name="content">
 
-<!-- ✅ 左メニューの右に合わせる -->
-<section class="mt-4 ms-4" style="max-width: 900px;">
+<!-- ✅ 位置＆幅（ここ重要） -->
+<section class="mt-4 ms-4" style="max-width: 1000px;">
 
-    <!-- ① タイトル -->
+    <!-- タイトル -->
     <h2 class="h4 mb-3 bg-secondary bg-opacity-10 py-2 px-3">
         成績参照
     </h2>
@@ -51,20 +52,19 @@
     <c:if test="${not empty errors.input}">
         <div class="alert alert-warning">${errors.input}</div>
     </c:if>
-
     <c:if test="${not empty errors.notfound}">
         <div class="alert alert-warning">${errors.notfound}</div>
     </c:if>
 
 
-    <!-- ===== ② 科目情報 ===== -->
+    <!-- ===== 科目情報 ===== -->
     <div class="fw-bold mb-2">科目情報</div>
 
     <form method="get" action="TestList.action">
-        <div class="row block-box align-items-end">
+        <div class="row block-box align-items-end gy-3">
 
-            <!-- ③ 入学年度 -->
-            <div class="col-2">
+            <!-- 入学年度 -->
+            <div class="col-3">
                 <label class="form-label">入学年度</label>
                 <select class="form-select form-select-sm" name="f1">
                     <option value="0">----</option>
@@ -76,8 +76,8 @@
                 </select>
             </div>
 
-            <!-- ④ クラス -->
-            <div class="col-2">
+            <!-- クラス -->
+            <div class="col-3">
                 <label class="form-label">クラス</label>
                 <select class="form-select form-select-sm" name="f2">
                     <option value="0">----</option>
@@ -89,8 +89,8 @@
                 </select>
             </div>
 
-            <!-- ⑤ 科目 -->
-            <div class="col-3">
+            <!-- 科目 -->
+            <div class="col-4">
                 <label class="form-label">科目</label>
                 <select class="form-select form-select-sm" name="f3">
                     <option value="0">----</option>
@@ -102,9 +102,9 @@
                 </select>
             </div>
 
-            <!-- ⑨ 検索 -->
-            <div class="col-3">
-                <button class="btn btn-secondary w-100 search-btn">
+            <!-- 検索 -->
+            <div class="col-2 d-flex">
+                <button class="btn btn-secondary search-btn">
                     検索
                 </button>
             </div>
@@ -113,14 +113,14 @@
     </form>
 
 
-    <!-- ===== ⑩ 学生情報 ===== -->
+    <!-- ===== 学生情報 ===== -->
     <div class="fw-bold mt-4 mb-2">学生情報</div>
 
     <form method="get" action="TestList.action">
-        <div class="row block-box align-items-end">
+        <div class="row block-box align-items-end gy-3">
 
-            <!-- ⑪ 学生番号 -->
-            <div class="col-4">
+            <!-- 学生番号 -->
+            <div class="col-5">
                 <label class="form-label">学生番号</label>
                 <input type="text" class="form-control form-control-sm"
                        name="student_no"
@@ -128,9 +128,9 @@
                        value="${student_no}">
             </div>
 
-            <!-- ⑬ 検索 -->
-            <div class="col-3">
-                <button class="btn btn-secondary w-100 search-btn">
+            <!-- 検索 -->
+            <div class="col-3 d-flex">
+                <button class="btn btn-secondary search-btn">
                     検索
                 </button>
             </div>
@@ -139,13 +139,13 @@
     </form>
 
 
-    <!-- ⑭ 説明 -->
+    <!-- 説明 -->
     <div class="text-primary mt-2">
         科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
     </div>
 
 
-    <!-- ===== 検索結果 ===== -->
+    <!-- 検索結果 -->
     <c:if test="${scores != null}">
         <h5 class="mt-4">検索結果</h5>
 
@@ -187,5 +187,4 @@
 
 </c:param>
 </c:import>
-
 
