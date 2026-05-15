@@ -1,47 +1,24 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!-- 全体レイアウト -->
-<div style="display:flex;">
+<c:import url="/common/base.jsp">
+    <c:param name="title">学生登録完了</c:param>
+    <c:param name="scripts"></c:param>
 
-    <!-- メイン -->
-    <div style="padding:20px; width:100%;">
+    <c:param name="content">
+        <section class="me-4">
+            <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2 px-4">学生情報登録</h2>
 
-        <!-- ① タイトル -->
-        <div style="
-            background:#e6e6e6;
-            padding:10px;
-            font-size:18px;
-            width:90%;
-        ">
-            成績管理
-        </div>
+            <!-- 完了メッセージ -->
+            <div class="alert alert-success mx-4 mt-3">
+                登録が完了しました
+            </div>
 
-        <!-- ② メッセージ -->
-        <div style="
-            background:#8fbc8f;
-            padding:10px;
-            margin-top:10px;
-            width:90%;
-        ">
-            登録が完了しました
-        </div>
-
-        <!-- ③④ リンク -->
-        <div style="
-            margin-top:30px;
-            padding-left:10px;
-        ">
-            <!-- ③ -->
-            <a href="test_list.jsp" style="margin-right:30px;">
-                戻る
-            </a>
-
-            <!-- ④ -->
-            <a href="test_list.jsp">
-                成績参照
-            </a>
-        </div>
-
-    </div>
-
-</div>
+            <!-- リンク -->
+            <div class="mt-4 px-4">
+                <a href="StudentList.action" class="me-4">戻る</a>
+                <a href="StudentList.action">学生一覧</a>
+            </div>
+        </section>
+    </c:param>
+</c:import>
