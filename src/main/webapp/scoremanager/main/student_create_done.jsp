@@ -32,7 +32,7 @@
             padding-left:10px;
         ">
             <!-- ③ -->
-            <a href="test_regist.jsp" style="margin-right:30px;">
+            <a href="test_list.jsp" style="margin-right:30px;">
                 戻る
             </a>
 
