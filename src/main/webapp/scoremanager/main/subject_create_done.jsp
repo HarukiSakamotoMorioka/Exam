@@ -16,13 +16,17 @@
                 登録が完了しました
             </div>
 
-            <div class="mt-4 px-4">
-			    <ul class="nav nav-pills flex-column mb-auto px-4">
-					<li class="nav-item mx-3 mb-3"><a href="TestRegist.action">戻る</a></li>
-					<li class="nav-item mx-3 mb-3"><a href="TestList.action">科目一覧</a></li>
-
-				</ul>
+           <div class="mt-4 px-4 position-relative">
+			    <ul class="nav mb-auto px-4">
+			        <li class="nav-item position-absolute start-0">
+			            <a href="TestRegist.action">戻る</a>
+			        </li>
+			        <li class="nav-item mx-5">
+			            <a href="TestList.action">科目一覧</a>
+			        </li>
+			    </ul>
 			</div>
+
 
 
         </section>
