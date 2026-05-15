@@ -9,12 +9,11 @@
  
 <p>この成績を削除しますか？</p>
  
-ScoreDelete.action
+
     <input type="hidden" name="id" value="${param.id}">
     <input type="submit" value="削除する">
 </form>
- 
-TestList.actionキャンセル</a>
+ キャンセル</a>
  
 </body>
 </html>
