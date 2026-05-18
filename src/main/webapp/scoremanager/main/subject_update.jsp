@@ -9,45 +9,40 @@
 
     <c:param name="content">
         <section class="me-4">
-            <h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">科目情報登録</h2>
 
-            
+            <!-- ▼ 画面タイトル -->
+            <h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">
+                科目情報変更
+            </h2>
 
-            <form action="SubjectCreate.action" method="post" class="px-4">
+            <form action="SubjectUpdate.action" method="post" class="px-4">
 
+                <!-- ▼ 科目コード（変更不可） -->
                 <div class="mb-3">
                     <label class="form-label">科目コード</label>
                     <input type="text" name="subjectCode" class="form-control"
-                           placeholder="科目コードを入力してください"
-                           value="${param.subjectCode}" required>
+                           value="${subject.cd}" readonly>
                 </div>
-                
-			
-			<!-- ▼ 科目コード文字数エラー -->
-			<c:if test="${not empty errorLengthMsg}">
-			    <div class="error-yellow">${errorLengthMsg}</div>
-			</c:if>
-			
-			<!-- ▼ 科目コード重複エラー -->
-			<c:if test="${not empty errorDuplicateMsg}">
-			    <div class="error-yellow">${errorDuplicateMsg}</div>
-			</c:if>
+                           <!-- ▼ エラーメッセージ（必要に応じて） -->
+	            <c:if test="${not empty errorMsg}">
+	                <div class="error-yellow">${errorMsg}</div>
+	            </c:if>
                 
 
+                <!-- ▼ 科目名 -->
                 <div class="mb-3">
                     <label class="form-label">科目名</label>
                     <input type="text" name="subjectName" class="form-control"
-                           placeholder="科目名を入力してください"
-                           value="${param.subjectName}" required>
+                           value="${subject.name}" required>
                 </div>
 
                 <div class="mt-4">
-                    <input type="submit" value="登録" class="btn btn-primary me-2">
+                    <input type="submit" value="変更" class="btn btn-primary me-2">
                     <input type="button" value="戻る" class="btn btn-secondary"
                            onclick="location.href='SubjectList.action'">
                 </div>
 
-            </form>
+             </form>
         </section>
     </c:param>
 </c:import>

@@ -114,4 +114,18 @@ public class SubjectDao extends Dao {
             e.printStackTrace();
         }
     }
+    public void update(Subject subject) {
+        try (Connection con = getConnection()) {
+            String sql = "UPDATE subject SET name = ? WHERE cd = ?";
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, subject.getName());
+            st.setString(2, subject.getCd());
+            st.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }
