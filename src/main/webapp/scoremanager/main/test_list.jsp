@@ -7,104 +7,36 @@
     <c:param name="content">
 
         <style>
-            .score-ref-area {
-                max-width: 900px;
-            }
-
+            .score-ref-area { max-width: 900px; }
             .score-ref-title {
                 font-size: 22px;
                 font-weight: normal;
-                background-color: rgba(108, 117, 125, 0.12);
+                background-color: rgba(108,117,125,0.12);
                 padding: 10px 24px;
                 margin-bottom: 18px;
             }
-
-            .block-title {
-                font-size: 16px;
-                font-weight: bold;
-                margin-bottom: 8px;
+            .block-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
+            .mini-label { display: block; font-size: 12px; margin-bottom: 4px; }
+            .compact-select, .compact-input {
+                height: 32px; font-size: 13px; padding-top: 4px; padding-bottom: 4px;
             }
-
-            .mini-label {
-                display: block;
-                font-size: 12px;
-                margin-bottom: 4px;
+            .subject-row, .student-row {
+                display: flex; flex-wrap: wrap; align-items: flex-end;
+                gap: 12px; margin-bottom: 18px;
             }
-
-            .compact-select,
-            .compact-input {
-                height: 32px;
-                font-size: 13px;
-                padding-top: 4px;
-                padding-bottom: 4px;
-            }
-
-            .subject-row,
-            .student-row {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: flex-end;
-                gap: 12px;
-                margin-bottom: 18px;
-            }
-
-            .field-year {
-                width: 150px;
-            }
-
-            .field-class {
-                width: 120px;
-            }
-
-            .field-subject {
-                width: 170px;
-            }
-
-            .field-student {
-                width: 220px;
-            }
-
+            .field-year { width: 150px; }
+            .field-class { width: 120px; }
+            .field-subject { width: 170px; }
+            .field-student { width: 220px; }
             .search-btn {
-                min-width: 56px;
-                height: 32px;
-                font-size: 12px;
-                padding: 0 14px;
-                background-color: #6c757d;
-                border-color: #6c757d;
-                color: #fff;
+                min-width: 56px; height: 32px; font-size: 12px;
+                padding: 0 14px; background-color: #6c757d;
+                border-color: #6c757d; color: #fff;
             }
-
             .search-btn:hover {
-                background-color: #5c636a;
-                border-color: #565e64;
-                color: #fff;
+                background-color: #5c636a; border-color: #565e64; color: #fff;
             }
-
-            .guide-text {
-                font-size: 12px;
-                margin-top: 8px;
-            }
-
-            .result-title {
-                font-size: 16px;
-                font-weight: bold;
-                margin-top: 18px;
-                margin-bottom: 8px;
-            }
-
-            .result-count {
-                font-size: 13px;
-                margin-bottom: 6px;
-            }
-
-            .score-table {
-                font-size: 13px;
-            }
-
-            .score-table th,
-            .score-table td {
-                vertical-align: middle;
-            }
+            .guide-text { font-size: 12px; margin-top: 8px; }
         </style>
 
         <section class="container mt-4 score-ref-area">
@@ -178,10 +110,8 @@
 
                     <div class="field-student">
                         <label class="mini-label">学生番号</label>
-                        <input type="text"
-                               class="form-control compact-input"
-                               name="student_no"
-                               placeholder="学生番号を入力してください"
+                        <input type="text" class="form-control compact-input"
+                               name="student_no" placeholder="学生番号を入力してください"
                                value="${student_no}">
                     </div>
 
@@ -197,39 +127,10 @@
                 科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
             </div>
 
-            <!-- 成績一覧 -->
-            <c:if test="${scores != null}">
-                <div class="result-title">検索結果</div>
-
-                <c:choose>
-                    <c:when test="${scores.size() > 0}">
-                        <div class="result-count">検索結果：${scores.size()}件</div>
-
-                        <table class="table table-hover table-sm score-table mt-2">
-                            <tr>
-                                <th>学生番号</th>
-                                <th>科目コード</th>
-                                <th>回数</th>
-                                <th>点数</th>
-                                <th>クラス</th>
-                            </tr>
-
-                            <c:forEach var="t" items="${scores}">
-                                <tr>
-                                    <td>${t.studentNo}</td>
-                                    <td>${t.subjectCd}</td>
-                                    <td>${t.no}</td>
-                                    <td>${t.point}</td>
-                                    <td>${t.classNum}</td>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                    </c:when>
-
-                    <c:otherwise>
-                        <div class="text-muted">成績情報が存在しませんでした</div>
-                    </c:otherwise>
-                </c:choose>
+            <!-- ★★★ 検索結果表示（test_list_student.jsp に任せる） ★★★ -->
+            <c:if test="${not empty scores}">
+                <hr class="my-4">
+                <jsp:include page="test_list_student.jsp" />
             </c:if>
 
         </section>

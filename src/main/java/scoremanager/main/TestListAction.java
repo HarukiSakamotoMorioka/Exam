@@ -26,7 +26,7 @@ public class TestListAction extends Action {
         Teacher teacher = (Teacher) session.getAttribute("user");
 
         if (teacher == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
@@ -42,7 +42,7 @@ public class TestListAction extends Action {
 
         Map<String, String> errors = new HashMap<>();
 
-        // 初期表示
+        // ★ 初期表示（検索フォームだけ表示）
         if (entYearStr == null && studentNo == null) {
             setForm(request, 0, "0", "0", "", errors, teacher);
             request.getRequestDispatcher("test_list.jsp").forward(request, response);
@@ -52,10 +52,10 @@ public class TestListAction extends Action {
         // ============================
         // ① 学生番号検索
         // ============================
-        if (studentNo != null && !studentNo.isEmpty()) {
+        if (studentNo != null && !studentNo.trim().isEmpty()) {
 
             TestListStudentDao stuDao = new TestListStudentDao();
-            List<TestListStudent> scores = stuDao.filterByStudentNo(schoolCd, studentNo);
+            List<TestListStudent> scores = stuDao.filterByStudentNo(schoolCd, studentNo.trim());
 
             if (scores.isEmpty()) {
                 errors.put("notfound", "成績情報が存在しませんでした");
@@ -64,7 +64,9 @@ public class TestListAction extends Action {
                 return;
             }
 
+            // ★ 学生番号検索 → test_list.jsp に forward
             request.setAttribute("scores", scores);
+            request.setAttribute("mode", "student");
             setForm(request, 0, "0", "0", studentNo, errors, teacher);
             request.getRequestDispatcher("test_list.jsp").forward(request, response);
             return;
@@ -79,6 +81,7 @@ public class TestListAction extends Action {
             entYear = Integer.parseInt(entYearStr);
         }
 
+        // 入力チェック
         if (entYear == 0 || "0".equals(classNum) || "0".equals(subjectCd)) {
             errors.put("input", "入学年度とクラスと科目を選択してください");
             setForm(request, entYear, classNum, subjectCd, "", errors, teacher);
@@ -86,18 +89,7 @@ public class TestListAction extends Action {
             return;
         }
 
-        TestListStudentDao stuDao = new TestListStudentDao();
         TestListSubjectDao subDao = new TestListSubjectDao();
-
-        List<TestListStudent> students = stuDao.filter(schoolCd, entYear, classNum);
-
-        if (students.isEmpty()) {
-            errors.put("notfound", "学生情報が存在しませんでした");
-            setForm(request, entYear, classNum, subjectCd, "", errors, teacher);
-            request.getRequestDispatcher("test_list.jsp").forward(request, response);
-            return;
-        }
-
         List<TestListSubject> scores = subDao.filter(schoolCd, subjectCd, entYear, classNum);
 
         if (scores.isEmpty()) {
@@ -107,7 +99,9 @@ public class TestListAction extends Action {
             return;
         }
 
+        // ★ 科目検索 → test_list.jsp に forward
         request.setAttribute("scores", scores);
+        request.setAttribute("mode", "subject");
         setForm(request, entYear, classNum, subjectCd, "", errors, teacher);
         request.getRequestDispatcher("test_list.jsp").forward(request, response);
     }
@@ -122,19 +116,10 @@ public class TestListAction extends Action {
         ClassNumDao cDao = new ClassNumDao();
         SubjectDao sDao = new SubjectDao();
 
-        // ★ DB から入学年度一覧を取得
-        request.setAttribute("ent_year_set",
-                stuDao.getEntYearList(schoolCd));
+        request.setAttribute("ent_year_set", stuDao.getEntYearList(schoolCd));
+        request.setAttribute("class_num_set", cDao.filter(schoolCd));
+        request.setAttribute("subject_set", sDao.filter(schoolCd));
 
-        // ★ DB からクラス番号一覧を取得
-        request.setAttribute("class_num_set",
-                cDao.filter(schoolCd));
-
-        // ★ DB から科目一覧を取得
-        request.setAttribute("subject_set",
-                sDao.filter(schoolCd));
-
-        // 入力値保持
         request.setAttribute("f1", entYear);
         request.setAttribute("f2", classNum);
         request.setAttribute("f3", subjectCd);

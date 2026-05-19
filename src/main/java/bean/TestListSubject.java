@@ -10,6 +10,12 @@ public class TestListSubject {
     private int point;          // 点数
     private String classNum;    // クラス
 
+    // ★★★ 追加項目（科目別一覧に必要） ★★★
+    private int entYear;        // 入学年度
+    private String studentName; // 氏名
+    private Integer point1;     // 1回
+    private Integer point2;     // 2回
+
     public TestListSubject() {}
 
     public String getSubjectCd() {
@@ -58,5 +64,39 @@ public class TestListSubject {
 
     public void setClassNum(String classNum) {
         this.classNum = classNum;
+    }
+
+    // ★★★ 追加した getter/setter ★★★
+
+    public int getEntYear() {
+        return entYear;
+    }
+
+    public void setEntYear(int entYear) {
+        this.entYear = entYear;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public Integer getPoint1() {
+        return point1;
+    }
+
+    public void setPoint1(Integer point1) {
+        this.point1 = point1;
+    }
+
+    public Integer getPoint2() {
+        return point2;
+    }
+
+    public void setPoint2(Integer point2) {
+        this.point2 = point2;
     }
 }
