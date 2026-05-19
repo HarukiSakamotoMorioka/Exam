@@ -51,7 +51,7 @@ public class SubjectUpdateAction extends Action {
         dao.update(subject);
 
         // 一覧へ
-        response.sendRedirect("SubjectList.action");
+        response.sendRedirect("SubjectUpdateDone.action");
     }
 
     private void forward(HttpServletRequest request, HttpServletResponse response) throws Exception {
