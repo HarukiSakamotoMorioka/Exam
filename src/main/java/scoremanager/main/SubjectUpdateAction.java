@@ -1,6 +1,7 @@
 package scoremanager.main;
 
 import bean.Subject;
+import bean.Teacher;
 import dao.SubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,18 +16,19 @@ public class SubjectUpdateAction extends Action {
         String code = request.getParameter("subjectCode");
         String name = request.getParameter("subjectName");
 
+        // ▼ ログイン中の先生を取得
+        Teacher teacher = (Teacher) request.getSession().getAttribute("user");
+        String schoolCd = teacher.getSchool().getCd();
+
         SubjectDao dao = new SubjectDao();
 
         // ▼ name が null → 画面を開いたとき（GET）
         if (name == null) {
 
-            // DB から科目情報を取得
-            Subject subject = dao.find(code);
+            // ★ 学校コード + 科目コードで取得
+            Subject subject = dao.find(schoolCd, code);
 
-            // JSP に渡す
             request.setAttribute("subject", subject);
-
-            // 更新画面へ
             forward(request, response);
             return;
         }
@@ -35,7 +37,8 @@ public class SubjectUpdateAction extends Action {
         if (name.isEmpty()) {
             request.setAttribute("errorMsg", "科目名を入力してください");
 
-            Subject subject = dao.find(code);
+            // ★ 再表示用に取得
+            Subject subject = dao.find(schoolCd, code);
             request.setAttribute("subject", subject);
 
             forward(request, response);
@@ -46,11 +49,10 @@ public class SubjectUpdateAction extends Action {
         Subject subject = new Subject();
         subject.setCd(code);
         subject.setName(name);
-        subject.setSchool("001");
+        subject.setSchool(schoolCd);  // ★ 先生の school_cd をセット
 
         dao.update(subject);
 
-        // 一覧へ
         response.sendRedirect("SubjectUpdateDone.action");
     }
 
@@ -59,4 +61,3 @@ public class SubjectUpdateAction extends Action {
                .forward(request, response);
     }
 }
-
