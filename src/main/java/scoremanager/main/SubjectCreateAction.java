@@ -53,7 +53,8 @@ public class SubjectCreateAction extends Action {
 
         dao.insert(subject);     // ← DAO に insert を作る必要あり
 
-        response.sendRedirect("SubjectList.action");
+        response.sendRedirect("SubjectCreateDone.action");
+
     }
 
     private void forward(HttpServletRequest request, HttpServletResponse response) throws Exception {

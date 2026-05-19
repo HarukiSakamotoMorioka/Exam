@@ -125,6 +125,21 @@ public class SubjectDao extends Dao {
             e.printStackTrace();
         }
     }
+    public void delete(String cd, String school_cd) throws Exception {
+        Connection con = getConnection();
+
+        PreparedStatement st = con.prepareStatement(
+            "DELETE FROM subject WHERE cd = ? AND school = ?"
+        );
+        st.setString(1, cd);
+        st.setString(2, school_cd);
+
+        st.executeUpdate();
+
+        st.close();
+        con.close();
+    }
+
 
 
 
