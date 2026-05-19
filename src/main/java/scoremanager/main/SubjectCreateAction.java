@@ -1,6 +1,7 @@
 package scoremanager.main;
 
 import bean.Subject;
+import bean.Teacher;
 import dao.SubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +15,10 @@ public class SubjectCreateAction extends Action {
         // ▼ 入力値取得
         String code = request.getParameter("subjectCode");
         String name = request.getParameter("subjectName");
+
+        // ▼ ログイン中の先生を取得（session に入っている）
+        Teacher teacher = (Teacher) request.getSession().getAttribute("user");
+        String schoolCd = teacher.getSchool().getCd();   // ← 先生の school_cd を取得
 
         // ▼ 未入力チェック
         if (code == null || code.isEmpty()) {
@@ -35,9 +40,9 @@ public class SubjectCreateAction extends Action {
             return;
         }
 
-        // ▼ 重複チェック
+        // ▼ 重複チェック（学校コード + 科目コード）
         SubjectDao dao = new SubjectDao();
-        Subject exist = dao.find(code);   // ← DAO に find を作る必要あり
+        Subject exist = dao.find(schoolCd, code);   // ← DAO 側に複合キー find が必要
 
         if (exist != null) {
             request.setAttribute("errorDuplicateMsg", "科目コードが重複しています");
@@ -47,14 +52,14 @@ public class SubjectCreateAction extends Action {
 
         // ▼ 登録処理
         Subject subject = new Subject();
-        subject.setCd(code);     // ← setCode ではなく setCd
+        subject.setCd(code);
         subject.setName(name);
-        subject.setSchool("001");   // ★学校コード（ログインユーザーの学校コードを入れる）
+        subject.setSchool(schoolCd);   // ← teacher の school_cd をセット
 
-        dao.insert(subject);     // ← DAO に insert を作る必要あり
+        dao.insert(subject);
 
+        // ▼ 完了画面へ
         response.sendRedirect("SubjectCreateDone.action");
-
     }
 
     private void forward(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -62,4 +67,3 @@ public class SubjectCreateAction extends Action {
                .forward(request, response);
     }
 }
-
