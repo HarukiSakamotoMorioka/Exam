@@ -127,11 +127,22 @@
                 科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
             </div>
 
-            <!-- ★★★ 検索結果表示（test_list_student.jsp に任せる） ★★★ -->
-            <c:if test="${not empty scores}">
-                <hr class="my-4">
-                <jsp:include page="test_list_student.jsp" />
-            </c:if>
+           <!-- ★ 学生番号検索で学生情報を表示する -->
+			<c:if test="${not empty student}">
+			    <hr class="my-4">
+			
+			    <div class="mx-4 my-3">
+			        <p><strong>氏名：</strong> ${student.name}（${student.no}）</p>
+			    </div>
+			
+			    <!-- 成績がない場合のメッセージ（青枠なし） -->
+			    <c:if test="${mode == 'student_no_score'}">
+			        <div class="mx-4 my-2">
+			            成績情報が存在しませんでした。
+			        </div>
+			    </c:if>
+			</c:if>
+
 
         </section>
 

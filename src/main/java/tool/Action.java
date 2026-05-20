@@ -8,5 +8,4 @@ public abstract class Action {
 	public abstract void execute(
 			HttpServletRequest req, HttpServletResponse res
 		) throws Exception;
-
 }

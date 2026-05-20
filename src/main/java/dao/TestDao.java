@@ -182,4 +182,24 @@ public class TestDao extends Dao {
 
         return count > 0;
     }
+    	 
+    public void insert(Test test) throws Exception {
+        String sql = "INSERT INTO test (student_no, subject_cd, school_cd, no, point, class_num) "
+                   + "VALUES (?, ?, ?, ?, ?, ?) "
+                   + "ON CONFLICT (student_no, subject_cd, school_cd, no) "
+                   + "DO UPDATE SET point = EXCLUDED.point, class_num = EXCLUDED.class_num";
+
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+        	ps.setString(1, test.getStudent().getNo());
+        	ps.setString(2, test.getSubject().getCd());
+        	ps.setString(3, test.getSchool().getCd());
+        	ps.setInt(4, test.getNo());
+        	ps.setInt(5, test.getPoint());
+        	ps.setString(6, test.getClassNum());
+
+            ps.executeUpdate();
+        }
+    }
+
 }

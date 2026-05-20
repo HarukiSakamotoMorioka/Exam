@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bean.Student;
 import bean.Teacher;
 import bean.TestListStudent;
 import bean.TestListSubject;
@@ -54,17 +55,33 @@ public class TestListAction extends Action {
         // ============================
         if (studentNo != null && !studentNo.trim().isEmpty()) {
 
-            TestListStudentDao stuDao = new TestListStudentDao();
-            List<TestListStudent> scores = stuDao.filterByStudentNo(schoolCd, studentNo.trim());
+            StudentDao studentDao = new StudentDao();
+            Student student = studentDao.get(studentNo.trim());  // ← ぽたの DAO に合わせた
 
-            if (scores.isEmpty()) {
-                errors.put("notfound", "成績情報が存在しませんでした");
+            // 学生が存在しない
+            if (student == null) {
+                errors.put("notfound", "学生情報が存在しませんでした");
                 setForm(request, 0, "0", "0", studentNo, errors, teacher);
                 request.getRequestDispatcher("test_list.jsp").forward(request, response);
                 return;
             }
 
-            // ★ 学生番号検索 → test_list.jsp に forward
+            // 成績検索
+            TestListStudentDao stuDao = new TestListStudentDao();
+            List<TestListStudent> scores = stuDao.filterByStudentNo(schoolCd, studentNo.trim());
+
+            // ★ 学生情報は必ず渡す
+            request.setAttribute("student", student);
+
+            if (scores.isEmpty()) {
+                // 成績なし → 学生情報だけ表示
+                request.setAttribute("mode", "student_no_score");
+                setForm(request, 0, "0", "0", studentNo, errors, teacher);
+                request.getRequestDispatcher("test_list.jsp").forward(request, response);
+                return;
+            }
+
+            // 成績あり
             request.setAttribute("scores", scores);
             request.setAttribute("mode", "student");
             setForm(request, 0, "0", "0", studentNo, errors, teacher);

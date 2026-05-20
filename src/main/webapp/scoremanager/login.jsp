@@ -7,6 +7,7 @@
 		得点管理システム
 	</c:param>
 
+
 	<c:param name="scripts">
 		<script type="text/javascript">
 			$(function() {
