@@ -1,30 +1,39 @@
 package scoremanager.main;
 
+import bean.Subject;
 import dao.SubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tool.Action;
 
 public class SubjectDeleteAction extends Action {
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    String method = request.getMethod();
 
-        // ▼ 削除対象の科目コードを取得
-        String cd = request.getParameter("cd");
+	    if (method.equals("GET")) {
+	        // ▼ 削除確認画面の表示
+	        String cd = request.getParameter("cd");
 
-        if (cd == null || cd.isEmpty()) {
-            // 科目コードが無い場合は一覧へ戻す
-            response.sendRedirect("SubjectList.action");
-            return;
-        }
+	        SubjectDao dao = new SubjectDao();
+	        Subject subject = dao.find(cd);
 
-        // ▼ DAO を使って削除（学校コード 001 を使用）
-        SubjectDao dao = new SubjectDao();
-        dao.delete(cd, "001");
+	        request.setAttribute("subject", subject);
+	        request.getRequestDispatcher("/scoremanager/main/subject_delete.jsp")
+	               .forward(request, response);
 
-        // ▼ 削除完了画面へフォワード
-        request.getRequestDispatcher("/scoremanager/main/subject_delete_done.jsp")
-               .forward(request, response);
-    }
+	    } else if (method.equals("POST")) {
+	        // ▼ 削除実行
+	        String cd = request.getParameter("cd");
+
+	        SubjectDao dao = new SubjectDao();
+	        dao.delete(cd);   // ← これが削除処理
+
+	        // 完了画面へ
+	        request.getRequestDispatcher("/scoremanager/main/subject_delete_done.jsp")
+	               .forward(request, response);
+	    }
+	}
+
 }

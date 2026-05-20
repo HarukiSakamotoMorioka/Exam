@@ -127,19 +127,67 @@ public class SubjectDao extends Dao {
         }
     }
 
-    // 科目削除（★ school → school_cd に修正）
-    public void delete(String cd, String schoolCd) throws Exception {
-
-        String sql = "DELETE FROM subject WHERE cd = ? AND school_cd = ?";
+    public void delete(String cd) throws Exception {
+        String sql = "DELETE FROM subject WHERE cd = ?";
 
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, cd);
-            ps.setString(2, schoolCd);
-
             ps.executeUpdate();
-
         }
     }
+
+    public Subject get(String cd, String schoolCd) throws Exception {
+
+        Subject subject = null;
+
+        Connection con = getConnection();
+        PreparedStatement st = con.prepareStatement(
+            "SELECT * FROM subject WHERE cd = ? AND school_cd = ?"
+        );
+        st.setString(1, cd);
+        st.setString(2, schoolCd);
+
+        ResultSet rs = st.executeQuery();
+
+        if (rs.next()) {
+            subject = new Subject();
+            subject.setCd(rs.getString("cd"));
+            subject.setName(rs.getString("name"));
+            subject.setSchool(rs.getString("school_cd")); // school_cd を持っている場合
+        }
+
+        rs.close();
+        st.close();
+        con.close();
+
+        return subject;
+    }
+    public Subject find(String cd) {
+        Subject subject = null;
+
+        String sql = "SELECT school_cd, cd, name FROM subject WHERE cd = ?";
+
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, cd);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    subject = new Subject();
+                    subject.setSchool(rs.getString("school_cd"));
+                    subject.setCd(rs.getString("cd"));
+                    subject.setName(rs.getString("name"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return subject;
+    }
+
+
 }
