@@ -7,33 +7,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import tool.Action;
 
 public class SubjectDeleteAction extends Action {
-	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-	    String method = request.getMethod();
+    @Override
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-	    if (method.equals("GET")) {
-	        // ▼ 削除確認画面の表示
-	        String cd = request.getParameter("cd");
+        // ▼ パラメータ取得
+        String cd = request.getParameter("cd");
 
-	        SubjectDao dao = new SubjectDao();
-	        Subject subject = dao.find(cd);
+        // ▼ 科目取得（cd のみ）
+        SubjectDao dao = new SubjectDao();
+        Subject subject = dao.find(cd);
 
-	        request.setAttribute("subject", subject);
-	        request.getRequestDispatcher("/scoremanager/main/subject_delete.jsp")
-	               .forward(request, response);
+        // ▼ JSP に渡す
+        request.setAttribute("subject", subject);
 
-	    } else if (method.equals("POST")) {
-	        // ▼ 削除実行
-	        String cd = request.getParameter("cd");
-
-	        SubjectDao dao = new SubjectDao();
-	        dao.delete(cd);   // ← これが削除処理
-
-	        // 完了画面へ
-	        request.getRequestDispatcher("/scoremanager/main/subject_delete_done.jsp")
-	               .forward(request, response);
-	    }
-	}
-
+        // ▼ 削除確認画面へ
+        request.getRequestDispatcher("/scoremanager/main/subject_delete.jsp")
+               .forward(request, response);
+    }
 }

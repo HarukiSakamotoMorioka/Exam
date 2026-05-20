@@ -18,7 +18,7 @@
 			    「${subject.name}（${subject.cd}）」を削除してもよろしいですか？
 			</p>
 			
-			<form action="SubjectDelete.action" method="post" class="mt-4">
+			<form action="SubjectDeleteExecute.action" method="post" class="mt-4">
 			    <input type="hidden" name="cd" value="${subject.cd}">
 			    <input type="submit" value="削除" class="btn btn-danger px-4">
 			</form>

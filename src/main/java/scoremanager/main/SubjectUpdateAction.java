@@ -13,50 +13,20 @@ public class SubjectUpdateAction extends Action {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         // ▼ パラメータ取得
-        String code = request.getParameter("subjectCode");
-        String name = request.getParameter("subjectName");
+        String cd = request.getParameter("cd");
 
-        // ▼ ログイン中の先生を取得
+        // ▼ ログイン中の先生の school_cd を取得
         Teacher teacher = (Teacher) request.getSession().getAttribute("user");
         String schoolCd = teacher.getSchool().getCd();
 
+        // ▼ 科目取得（学校コード + 科目コード）
         SubjectDao dao = new SubjectDao();
+        Subject subject = dao.find(schoolCd, cd);
 
-        // ▼ name が null → 画面を開いたとき（GET）
-        if (name == null) {
+        // ▼ JSP に渡す
+        request.setAttribute("subject", subject);
 
-            // ★ 学校コード + 科目コードで取得
-            Subject subject = dao.find(schoolCd, code);
-
-            request.setAttribute("subject", subject);
-            forward(request, response);
-            return;
-        }
-
-        // ▼ name が空 → バリデーションエラー（POST）
-        if (name.isEmpty()) {
-            request.setAttribute("errorMsg", "科目名を入力してください");
-
-            // ★ 再表示用に取得
-            Subject subject = dao.find(schoolCd, code);
-            request.setAttribute("subject", subject);
-
-            forward(request, response);
-            return;
-        }
-
-        // ▼ 更新処理（POST）
-        Subject subject = new Subject();
-        subject.setCd(code);
-        subject.setName(name);
-        subject.setSchool(schoolCd);  // ★ 先生の school_cd をセット
-
-        dao.update(subject);
-
-        response.sendRedirect("SubjectUpdateDone.action");
-    }
-
-    private void forward(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // ▼ 画面表示
         request.getRequestDispatcher("/scoremanager/main/subject_update.jsp")
                .forward(request, response);
     }
