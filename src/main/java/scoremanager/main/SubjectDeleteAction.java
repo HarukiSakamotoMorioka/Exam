@@ -1,6 +1,7 @@
 package scoremanager.main;
 
 import bean.Subject;
+import bean.Teacher;
 import dao.SubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,9 +15,13 @@ public class SubjectDeleteAction extends Action {
         // ▼ パラメータ取得
         String cd = request.getParameter("cd");
 
-        // ▼ 科目取得（cd のみ）
+        // ▼ ログイン中の先生の school_cd を取得
+        Teacher teacher = (Teacher) request.getSession().getAttribute("user");
+        String schoolCd = teacher.getSchool().getCd();
+
+        // ▼ 科目取得（学校コード + 科目コード）
         SubjectDao dao = new SubjectDao();
-        Subject subject = dao.find(cd);
+        Subject subject = dao.find(schoolCd, cd);
 
         // ▼ JSP に渡す
         request.setAttribute("subject", subject);

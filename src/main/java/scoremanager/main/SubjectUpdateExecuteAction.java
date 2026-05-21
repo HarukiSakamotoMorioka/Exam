@@ -45,6 +45,6 @@ public class SubjectUpdateExecuteAction extends Action {
         dao.update(subject);
 
         // ▼ 完了画面へ
-        response.sendRedirect("subject_update.jsp");
+        response.sendRedirect("subject_update_done.jsp");
     }
 }
