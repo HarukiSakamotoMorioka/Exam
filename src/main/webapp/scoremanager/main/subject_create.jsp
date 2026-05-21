@@ -13,7 +13,7 @@
 
             
 
-            <form action="SubjectCreate.action" method="post" class="px-4">
+            <form action="SubjectCreateExecute.action" method="post" class="px-4">
 
                 <div class="mb-3">
                     <label class="form-label">科目コード</label>
