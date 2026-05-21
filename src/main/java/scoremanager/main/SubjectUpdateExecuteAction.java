@@ -36,6 +36,24 @@ public class SubjectUpdateExecuteAction extends Action {
             return;
         }
 
+        // ▼ ★ ここで「科目がまだ存在するか」をチェック
+        Subject current = dao.find(schoolCd, code);
+        if (current == null) {
+
+            // 画像のエラー内容に合わせる
+            request.setAttribute("errorMsg", "科目が存在していません");
+
+            // 入力された科目名は残す
+            Subject s = new Subject();
+            s.setCd(code);
+            s.setName(name);
+            request.setAttribute("subject", s);
+
+            request.getRequestDispatcher("/scoremanager/main/subject_update.jsp")
+                   .forward(request, response);
+            return;
+        }
+
         // ▼ 更新処理
         Subject subject = new Subject();
         subject.setCd(code);
@@ -48,3 +66,4 @@ public class SubjectUpdateExecuteAction extends Action {
         response.sendRedirect("subject_update_done.jsp");
     }
 }
+
