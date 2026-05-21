@@ -16,7 +16,7 @@
                 科目情報変更
             </h2>
 
-            <form action="SubjectUpdate.action" method="post" class="px-4">
+            <form action="SubjectUpdateExecute.action" method="post" class="px-4">
 
                 <!-- ▼ 科目コード（変更不可） -->
                 <div class="mb-3">
