@@ -45,18 +45,15 @@
             <h2 class="score-ref-title">成績参照</h2>
 
             <!-- エラー表示 -->
-            <c:if test="${not empty errors.input}">
-                <div class="alert alert-warning py-2 px-3">${errors.input}</div>
-            </c:if>
-
-            <c:if test="${not empty errors.notfound}">
-                <div class="alert alert-warning py-2 px-3">${errors.notfound}</div>
+            <c:if test="${not empty error}">
+                <div class="alert alert-warning py-2 px-3">${error}</div>
             </c:if>
 
             <!-- 科目情報 -->
             <div class="block-title">科目情報</div>
 
-            <form method="get" action="TestList.action" class="mb-3">
+            <!-- ★ 科目検索フォーム（シーケンス図どおり） -->
+            <form method="get" action="TestListSubjectExecute.action" class="mb-3">
                 <div class="subject-row">
 
                     <div class="field-year">
@@ -105,7 +102,8 @@
             <!-- 学生情報 -->
             <div class="block-title">学生情報</div>
 
-            <form method="get" action="TestList.action" class="mb-2">
+            <!-- ★ 学生番号検索フォーム（シーケンス図どおり） -->
+            <form method="get" action="TestListStudentExecute.action" class="mb-2">
                 <div class="student-row">
 
                     <div class="field-student">
@@ -127,23 +125,12 @@
                 科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
             </div>
 
-           <!-- ★ 学生番号検索で学生情報を表示する -->
-			<c:if test="${not empty student}">
-			    <hr class="my-4">
-			
-			    <div class="mx-4 my-3">
-			        <p><strong>氏名：</strong> ${student.name}（${student.no}）</p>
-			    </div>
-			
-			    <!-- 成績がない場合のメッセージ（青枠なし） -->
-			    <c:if test="${mode == 'student_no_score'}">
-			        <div class="mx-4 my-2">
-			            成績情報が存在しませんでした。
-			        </div>
-			    </c:if>
+			<!-- ★ 検索結果表示（学生 or 科目） -->
+			<c:if test="${not empty mode}">
+			    <jsp:include page="test_list_student.jsp" />
 			</c:if>
-
-
+			
+			
         </section>
 
     </c:param>

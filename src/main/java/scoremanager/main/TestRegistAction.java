@@ -1,89 +1,69 @@
 package scoremanager.main;
 
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
-import bean.School;
 import bean.Student;
-import bean.Subject;
 import bean.Teacher;
-import dao.ClassNumDao;
 import dao.StudentDao;
-import dao.SubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import tool.Action;
+import tool.Util;
 
 public class TestRegistAction extends Action {
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res)
-            throws Exception {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
-        HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+        Util util = new Util();
+        Teacher teacher = util.getUser(req);
+        
+        // ▼ 初期表示セット（Util）
+        util.setEntYearSet(req);
+        util.setClassNumSet(req);
+        util.setSubjects(req);
+        util.setNumSet(req);
 
-        if (teacher == null) {
-            res.sendRedirect(req.getContextPath() + "/scoremanager/Login.action");
+        // ▼ 検索条件取得
+        String entYear = req.getParameter("entYear");
+        String classNum = req.getParameter("classNum");
+        String subjectCd = req.getParameter("subjectCd");
+        String num = req.getParameter("num");
+
+        // 初期表示（検索前）
+        if (entYear == null && classNum == null && subjectCd == null && num == null) {
+            req.getRequestDispatcher("test_regist.jsp").forward(req, res);
             return;
         }
 
-        School school = teacher.getSchool();
-        String schoolCd = school.getCd();
-
-        // 入学年度一覧
-        StudentDao studentDao = new StudentDao();
-        List<Student> allStudents = studentDao.filter(school, false);
-        Set<Integer> entYearSet = new TreeSet<>();
-        for (Student s : allStudents) entYearSet.add(s.getEntYear());
-        req.setAttribute("ent_year_set", entYearSet);
-
-        // クラス一覧
-        ClassNumDao classNumDao = new ClassNumDao();
-        req.setAttribute("class_num_set", classNumDao.filter(schoolCd));
-
-        // 科目一覧
-        SubjectDao subjectDao = new SubjectDao();
-        req.setAttribute("subject_set", subjectDao.findAll());
-
-        // 回数一覧
-        Set<Integer> numSet = new TreeSet<>();
-        for (int i = 1; i <= 10; i++) numSet.add(i);
-        req.setAttribute("numSet", numSet);
-
-        // 検索条件
-        String entYearStr = req.getParameter("entYear");
-        String classNum   = req.getParameter("classNum");
-        String subjectCd  = req.getParameter("subjectCd");
-        String numStr     = req.getParameter("num");
-
-        boolean searched =
-            entYearStr != null && !entYearStr.isEmpty() &&
-            classNum   != null && !classNum.isEmpty() &&
-            subjectCd  != null && !subjectCd.isEmpty() &&
-            numStr     != null && !numStr.isEmpty();
-
-        if (searched) {
-            int entYear = Integer.parseInt(entYearStr);
-            int num     = Integer.parseInt(numStr);
-
-            Subject subject = subjectDao.find(schoolCd, subjectCd);
-            List<Student> testListStudent =
-                studentDao.filter(school, entYear, classNum, false);
-
-            req.setAttribute("testListStudent", testListStudent);
-            req.setAttribute("subject", subject);
-            req.setAttribute("num", num);
+        // 入力チェック
+        if (entYear.isEmpty() || classNum.isEmpty() || subjectCd.isEmpty() || num.isEmpty()) {
+            req.setAttribute("errors", "すべての項目を選択してください");
+            req.getRequestDispatcher("test_regist.jsp").forward(req, res);
+            return;
         }
 
-        req.setAttribute("selEntYear",   entYearStr);
-        req.setAttribute("selClassNum",  classNum);
-        req.setAttribute("selSubjectCd", subjectCd);
-        req.setAttribute("selNum",       numStr);
+        // ▼ 学生一覧取得（TestListStudentDao ではなく StudentDao）
+        StudentDao stuDao = new StudentDao();
+        List<Student> list = stuDao.filter(
+                teacher.getSchool(),
+                Integer.parseInt(entYear),
+                classNum,
+                true   // 出席している学生のみ
+        );
 
-        req.getRequestDispatcher("/scoremanager/main/test_regist.jsp")
-           .forward(req, res);
+        // JSP に渡す
+        req.setAttribute("studentList", list);
+
+
+        req.setAttribute("testListStudent", list);
+
+        // ▼ 選択状態を保持
+        req.setAttribute("selEntYear", entYear);
+        req.setAttribute("selClassNum", classNum);
+        req.setAttribute("selSubjectCd", subjectCd);
+        req.setAttribute("selNum", num);
+
+        req.getRequestDispatcher("test_regist.jsp").forward(req, res);
     }
 }

@@ -43,24 +43,30 @@
  
             <!-- 科目 -->
             <div class="col-4">
-                <label class="form-label">科目</label>
-                <select class="form-select" name="subjectCd">
-                    <option value="">--------</option>
-                    <c:forEach var="sub" items="${subject_set}">
-                        <option value="${sub.cd}" <c:if test="${sub.cd == selSubjectCd}">selected</c:if>>${sub.name}</option>
-                    </c:forEach>
-                </select>
-            </div>
+			    <label class="form-label">科目</label>
+			    <select class="form-select" name="subjectCd">
+			        <option value="">--------</option>
+			        <c:forEach var="sub" items="${subjects}">
+			            <option value="${sub.cd}" <c:if test="${sub.cd == selSubjectCd}">selected</c:if>>
+			                ${sub.name}
+			            </option>
+			        </c:forEach>
+			    </select>
+			</div>
+
+
+
  
             <!-- 回数 -->
             <div class="col-2">
                 <label class="form-label">回数</label>
                 <select class="form-select" name="num">
-                    <option value="">--------</option>
-                    <c:forEach var="n" items="${numSet}">
-                        <option value="${n}" <c:if test="${n == selNum}">selected</c:if>>${n}</option>
-                    </c:forEach>
-                </select>
+				    <option value="">--------</option>
+				    <c:forEach var="n" items="${num_set}">
+				        <option value="${n}" <c:if test="${n == selNum}">selected</c:if>>${n}</option>
+				    </c:forEach>
+				</select>
+
             </div>
  
             <div class="col-2 text-center">
@@ -72,6 +78,19 @@
  
     <!-- 検索後：学生一覧に点数入力 -->
     <c:if test="${testListStudent != null}">
+	    <!-- ▼ 科目名と回数の表示（1行でスッキリ） -->
+		<div class="mx-3 mb-3 p-2 bg-light border rounded">
+		    <h5 class="mb-0">
+		        科目：
+		        <c:forEach var="sub" items="${subjects}">
+		            <c:if test="${sub.cd == selSubjectCd}">
+		                ${sub.name}
+		            </c:if>
+		        </c:forEach>
+		        （${selNum}回）
+		    </h5>
+		</div>
+
         <form method="post" action="TestRegistExecute.action">
             <input type="hidden" name="subjectCd" value="${selSubjectCd}">
             <input type="hidden" name="num" value="${selNum}">
@@ -86,19 +105,20 @@
                     <th>氏名</th>
                     <th>点数</th>
                 </tr>
-                <c:forEach var="s" items="${testListStudent}">
-                    <tr>
-                        <td>${s.entYear}</td>
-                        <td>${s.classNum}</td>
-                        <td>${s.no}</td>
-                        <td>${s.name}</td>
-                        <td>
-                            <input type="hidden" name="studentNo" value="${s.no}">
-                            <input type="number" class="form-control" name="point_${s.no}"
-                                   min="0" max="100" placeholder="0〜100">
-                        </td>
-                    </tr>
-                </c:forEach>
+			<c:forEach var="s" items="${studentList}">
+			    <tr>
+			        <td>${s.entYear}</td>
+			        <td>${s.classNum}</td>
+			        <td>${s.no}</td>
+			        <td>${s.name}</td>
+			        <td>
+			            <input type="hidden" name="studentNo" value="${s.no}">
+			            <input type="number" class="form-control" name="point_${s.no}"
+			                   min="0" max="100" placeholder="0〜100">
+			        </td>
+			    </tr>
+			</c:forEach>
+
             </table>
  
             <div class="text-center mt-3">
